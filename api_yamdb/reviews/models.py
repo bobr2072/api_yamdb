@@ -6,7 +6,7 @@ from django.utils import timezone
 User = get_user_model()
 
 
-class Categories(models.Model):
+class Category(models.Model):
     name = models.CharField(max_length=256, verbose_name='Название категории')
     slug = models.SlugField(max_length=50, unique=True, db_index=True)
 
@@ -15,10 +15,10 @@ class Categories(models.Model):
         verbose_name_plural = 'Категории'
 
     def __str__(self):
-        return f'{self.name} {self.name}'
+        return self.slug
 
 
-class Genres(models.Model):
+class Genre(models.Model):
     name = models.CharField(
         max_length=256,
         verbose_name='Название жанра',
@@ -33,7 +33,15 @@ class Genres(models.Model):
         return self.slug
 
 
-class Titles(models.Model):
+class GenreTitle(models.Model):
+    genre = models.ForeignKey('Genre', on_delete=models.CASCADE)
+    title = models.ForeignKey('Title', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.title} {self.genre}'
+
+
+class Title(models.Model):
     name = models.CharField(max_length=256, verbose_name='Название')
     year = models.IntegerField(
         validators=[MaxValueValidator(timezone.now().year)], verbose_name='Год'
@@ -42,16 +50,17 @@ class Titles(models.Model):
         max_length=255, null=True, blank=True, verbose_name='Описание'
     )
     genre = models.ManyToManyField(
-        Genres,
+        Genre,
         blank=True,
-        related_name='genre',
+        related_name='title',
         verbose_name='Жанр',
-        db_index=True
+        db_index=True,
+        through='GenreTitle',
     )
     category = models.ForeignKey(
-        Categories,
+        Category,
         on_delete=models.SET_NULL,
-        related_name='category',
+        related_name='title',
         verbose_name='Категория',
         null=True,
         blank=True,
