@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'reviews.apps.ReviewsConfig',
     'api.apps.ApiConfig',
+    'users'
 ]
 
 MIDDLEWARE = [
@@ -125,7 +126,9 @@ SIMPLE_JWT = {
 
 # Internationalization
 
-LANGUAGE_CODE = 'ru-RU'
+
+LANGUAGE_CODE = 'ru-Ru'
+
 
 TIME_ZONE = 'Europe/Moscow'
 
@@ -141,3 +144,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
+
+AUTH_USER_MODEL = 'users.CustomUser'
