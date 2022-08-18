@@ -80,7 +80,7 @@ class Review(models.Model):
         (1, 1), (2, 2), (3, 3), (4, 4), (5, 5),
         (6, 6), (7, 7), (8, 8), (9, 9), (10, 10)
     ]
-    title = models.ForeignKey(
+    title: models.ForeignKey = models.ForeignKey(
         'Title',
         on_delete=models.CASCADE,
         related_name='reviews',
