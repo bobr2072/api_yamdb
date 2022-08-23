@@ -9,7 +9,6 @@ VERSION = 'v1'
 
 router_v1 = DefaultRouter()
 router_v1.register('users', UserViewSet, basename='users')
-router_v1 = DefaultRouter()
 router_v1.register('titles', TitleViewSet, basename='title')
 router_v1.register('categories', CategoryViewSet, basename='category')
 router_v1.register('genres', GenreViewSet, basename='genre')
@@ -28,5 +27,4 @@ urlpatterns = [
     path(f'{VERSION}', include(router_v1.urls)),
     path(f'{VERSION}/auth/signup/', register, name='register'),
     path(f'{VERSION}/auth/token/', token, name='login'),
-    path(f'{VERSION}/', include(router_v1.urls))
 ]
