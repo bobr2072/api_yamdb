@@ -24,10 +24,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
+    'django_filters',
     'reviews',
     'api',
     'users',
-    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -89,7 +89,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = 'users.CustomUser'
+AUTH_USER_MODEL = 'users.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

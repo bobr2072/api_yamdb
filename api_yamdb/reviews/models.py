@@ -1,9 +1,7 @@
-from django.contrib.auth import get_user_model
 from django.db import models
 from django.core.validators import MaxValueValidator
 from django.utils import timezone
-
-User = get_user_model()
+from users.models import User
 
 
 class Category(models.Model):
@@ -31,14 +29,6 @@ class Genre(models.Model):
 
     def __str__(self):
         return self.slug
-
-
-class GenreTitle(models.Model):
-    genre = models.ForeignKey('Genre', on_delete=models.CASCADE)
-    title = models.ForeignKey('Title', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f'{self.title} {self.genre}'
 
 
 class Title(models.Model):
@@ -74,6 +64,14 @@ class Title(models.Model):
         return self.name
 
 
+class GenreTitle(models.Model):
+    genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
+    title = models.ForeignKey(Title, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.title} {self.genre}'
+
+
 class Review(models.Model):
     """Review model"""
     RATING_CHOICES = [
@@ -81,7 +79,7 @@ class Review(models.Model):
         (6, 6), (7, 7), (8, 8), (9, 9), (10, 10)
     ]
     title: models.ForeignKey = models.ForeignKey(
-        'Title',
+        Title,
         on_delete=models.CASCADE,
         related_name='reviews',
         verbose_name='Произведение',

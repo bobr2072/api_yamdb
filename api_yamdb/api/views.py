@@ -3,7 +3,9 @@ from rest_framework import viewsets, filters
 
 from reviews.models import Title, Review, Genre, Title, Category
 from .filters import TitleFilter
-from .permissions import AdminModeratorOwnerOrReadOnly
+from .permissions import (AdminModeratorOwnerOrReadOnly,
+                          IsAdminOrReadOnly,
+                          AdminOrReadOnly)
 from .serializers import (CommentSerializer,
                           ReviewSerializer,
                           GenreSerializer,
@@ -15,7 +17,7 @@ from .serializers import (CommentSerializer,
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
-    permission_classes = (AdminModeratorOwnerOrReadOnly,)
+    permission_classes = (IsAdminOrReadOnly,)
     filterset_class = TitleFilter
 
     def get_serializer_class(self):
@@ -27,7 +29,7 @@ class TitleViewSet(viewsets.ModelViewSet):
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all().order_by('id')
     serializer_class = CategorySerializer
-    permission_classes = (AdminModeratorOwnerOrReadOnly,)
+    permission_classes = (AdminOrReadOnly,)
     filter_backends = (filters.SearchFilter, )
     search_fields = ('=name', )
     lookup_field = 'slug'
@@ -36,7 +38,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    permission_classes = (AdminModeratorOwnerOrReadOnly, )
+    permission_classes = (AdminOrReadOnly, )
     filter_backends = (filters.SearchFilter,)
     search_fields = ('=name', )
 

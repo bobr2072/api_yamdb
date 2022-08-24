@@ -8,7 +8,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
-from .models import CustomUser
+from .models import User
 from api.serializers import IsAdmin
 from api.serializers import RegisterSerializer, AdminUserSerializer
 from api.serializers import UserSerializer, TokenSerializer
@@ -16,7 +16,7 @@ from api_yamdb.settings import DEFAULT_FROM_EMAIL
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = CustomUser.objects.all()
+    queryset = User.objects.all()
     serializer_class = AdminUserSerializer
     permission_classes = (IsAdmin,)
     filter_backends = (filters.SearchFilter,)
@@ -63,7 +63,7 @@ def token(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     username = serializer.data['username']
-    user = get_object_or_404(CustomUser, username=username)
+    user = get_object_or_404(User, username=username)
     confirmation_code = serializer.data['confirmation_code']
     if not default_token_generator.check_token(user, confirmation_code):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

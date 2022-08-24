@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
 from reviews.models import Review, Comment, Category, Genre, Title
-from users.models import CustomUser
+from users.models import User
 from rest_framework import serializers, permissions
 from rest_framework.validators import UniqueValidator
 
@@ -14,20 +14,21 @@ class TokenSerializer(serializers.Serializer):
     confirmation_code = serializers.CharField()
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = ('username', 'confirmation_code')
 
 
 class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = ('username', 'email',)
 
     def validate_username(self, value):
         if value == 'me':
             raise serializers.ValidationError(
                 'Выберите другой логин.')
+        return value
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -76,7 +77,7 @@ class IsAdmin(permissions.BasePermission):
 class AdminUserSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = (
             'username', 'email', 'first_name', 'last_name', 'bio', 'role',
         )
@@ -85,15 +86,15 @@ class AdminUserSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     role = serializers.StringRelatedField(read_only=True)
     username = serializers.CharField(
-        validators=[UniqueValidator(queryset=CustomUser.objects.all())
+        validators=[UniqueValidator(queryset=User.objects.all())
                     ], required=True,)
     email = serializers.EmailField(
-        validators=[UniqueValidator(queryset=CustomUser.objects.all())
+        validators=[UniqueValidator(queryset=User.objects.all())
                     ],
     )
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = ('__all__')
 
 
@@ -141,7 +142,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     """Comment model serializer"""
     review = serializers.SlugRelatedField(
-        slug_field='test',
+        slug_field='text',
         read_only=True
     )
     author = serializers.SlugRelatedField(
