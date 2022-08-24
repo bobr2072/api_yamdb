@@ -1,7 +1,9 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.core.validators import MaxValueValidator
 from django.utils import timezone
-from users.models import CustomUser
+
+User = get_user_model()
 
 
 class Category(models.Model):
@@ -89,7 +91,7 @@ class Review(models.Model):
         help_text='Текст отзыва'
     )
     author: models.ForeignKey = models.ForeignKey(
-        CustomUser,
+        User,
         on_delete=models.CASCADE,
         related_name='reviews',
         verbose_name='Автор отзыва',
@@ -134,7 +136,7 @@ class Comment(models.Model):
         help_text='Текст комментария'
     )
     author: models.ForeignKey = models.ForeignKey(
-        CustomUser,
+        User,
         on_delete=models.CASCADE,
         related_name='comments',
         verbose_name='Автор комментария',
