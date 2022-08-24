@@ -40,15 +40,11 @@ def validate_kwargs(kwargs: dict):
             "%Y-%m-%dT%H:%M:%S.%fZ"
         )
     if kwargs.get('review_id'):
-        kwargs['review_id'] = Review.objects.get(
-            id=int(kwargs['review_id'])
-        )
+        kwargs['review_id'] = int(kwargs['review_id'])
     if kwargs.get('score'):
         kwargs['score'] = int(kwargs['score'])
     if kwargs.get('title_id'):
-        kwargs['title_id'] = Title.objects.get(
-            id=int(kwargs['title_id'])
-        )
+        kwargs['title_id'] = int(kwargs['title_id'])
     if kwargs.get('year'):
         kwargs['year'] = int(kwargs['year'])
 
