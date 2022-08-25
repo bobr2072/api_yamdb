@@ -4,20 +4,20 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     '''Пользовательские роли'''
-    USER = 'User'
-    MODERATOR = 'Moderator'
-    ADMIN = 'Admin'
+    USER = 'user'
+    MODERATOR = 'moderator'
+    ADMIN = 'admin'
     ROLE = [
-        (USER, 'User'),
-        (MODERATOR, 'Moderator'),
-        (ADMIN, 'Admin'),
+        (USER, 'user'),
+        (MODERATOR, 'moderator'),
+        (ADMIN, 'admin'),
     ]
 
     username = models.TextField('Имя пользователя', max_length=50,
                                 unique=True)
     email = models.EmailField('Почта', unique=True)
-    role = models.CharField('Роль пользователя',
-                            choices=ROLE, default=USER, max_length=50)
+    role = models.CharField('Роль пользователя', max_length=100,
+                            choices=ROLE, default=USER)
     bio = models.TextField(verbose_name='О себе', null=True, blank=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']

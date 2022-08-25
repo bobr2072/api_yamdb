@@ -5,17 +5,23 @@ from rest_framework.validators import UniqueTogetherValidator
 
 from reviews.models import Review, Comment, Category, Genre, Title
 from users.models import User
-from rest_framework import serializers, permissions
+from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
 
-class TokenSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    confirmation_code = serializers.CharField()
+class UserSerializer(serializers.ModelSerializer):
+    role = serializers.StringRelatedField(read_only=True)
+    username = serializers.CharField(
+        validators=[UniqueValidator(queryset=User.objects.all())
+                    ], required=True,)
+    email = serializers.EmailField(
+        validators=[UniqueValidator(queryset=User.objects.all())
+                    ],
+    )
 
     class Meta:
         model = User
-        fields = ('username', 'confirmation_code')
+        fields = ('__all__')
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -29,6 +35,24 @@ class RegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Выберите другой логин.')
         return value
+
+
+class TokenSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    confirmation_code = serializers.CharField()
+
+    class Meta:
+        model = User
+        fields = ('username', 'confirmation_code')
+
+
+class AdminUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = (
+            'username', 'email', 'first_name', 'last_name', 'bio', 'role',
+        )
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -66,36 +90,6 @@ class TitleCreateSerializer(serializers.ModelSerializer):
                 'Проверьте год создания произведения!'
             )
         return value
-
-
-class IsAdmin(permissions.BasePermission):
-    def has_permission(self, request, view):
-        return request.user.is_authenticated and (
-            request.user.is_admin or request.user.is_superuser)
-
-
-class AdminUserSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = (
-            'username', 'email', 'first_name', 'last_name', 'bio', 'role',
-        )
-
-
-class UserSerializer(serializers.ModelSerializer):
-    role = serializers.StringRelatedField(read_only=True)
-    username = serializers.CharField(
-        validators=[UniqueValidator(queryset=User.objects.all())
-                    ], required=True,)
-    email = serializers.EmailField(
-        validators=[UniqueValidator(queryset=User.objects.all())
-                    ],
-    )
-
-    class Meta:
-        model = User
-        fields = ('__all__')
 
 
 class TitleSerializer(serializers.ModelSerializer):
