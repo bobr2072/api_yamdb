@@ -4,13 +4,13 @@ from django.contrib.auth.models import AbstractUser
 
 class CustomUser(AbstractUser):
     '''Пользовательские роли'''
-    USER = 'User'
-    MODERATOR = 'Moderator'
-    ADMIN = 'Admin'
+    USER = 'user'
+    MODERATOR = 'moderator'
+    ADMIN = 'admin'
     ROLE = [
-        (USER, 'User'),
-        (MODERATOR, 'Moderator'),
-        (ADMIN, 'Admin'),
+        (USER, 'user'),
+        (MODERATOR, 'moderator'),
+        (ADMIN, 'admin'),
     ]
 
     username = models.TextField('Имя пользователя', max_length=50,

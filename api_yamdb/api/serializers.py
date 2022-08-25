@@ -28,7 +28,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         if value == 'me':
             raise serializers.ValidationError(
                 'Выберите другой логин.')
-
+        return value
 
 class CategorySerializer(serializers.ModelSerializer):
 
