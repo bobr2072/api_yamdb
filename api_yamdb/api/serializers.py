@@ -1,12 +1,14 @@
+from django.contrib.auth import get_user_model
 from django.db.models import Avg
 from django.utils import timezone
 
 from reviews.models import Review, Comment, Category, Genre, Title
-from users.models import CustomUser
 from rest_framework import serializers, permissions
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.validators import UniqueValidator
+
+User = get_user_model()
 
 
 class TokenSerializer(serializers.Serializer):
@@ -14,14 +16,14 @@ class TokenSerializer(serializers.Serializer):
     confirmation_code = serializers.CharField()
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = ('username', 'confirmation_code')
 
 
 class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = ('username', 'email',)
 
     def validate_username(self, value):
@@ -76,7 +78,7 @@ class IsAdmin(permissions.BasePermission):
 class AdminUserSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = (
             'username', 'email', 'first_name', 'last_name', 'bio', 'role',
         )
@@ -85,15 +87,15 @@ class AdminUserSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     role = serializers.StringRelatedField(read_only=True)
     username = serializers.CharField(
-        validators=[UniqueValidator(queryset=CustomUser.objects.all())
+        validators=[UniqueValidator(queryset=User.objects.all())
                     ], required=True,)
     email = serializers.EmailField(
-        validators=[UniqueValidator(queryset=CustomUser.objects.all())
+        validators=[UniqueValidator(queryset=User.objects.all())
                     ],
     )
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = ('__all__')
 
 
