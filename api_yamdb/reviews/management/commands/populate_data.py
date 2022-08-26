@@ -1,13 +1,13 @@
+import csv
+import os
 from collections import defaultdict
 from datetime import datetime
 from typing import Dict, List
-import csv
-import os
 
-from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth import get_user_model
+from django.core.management.base import BaseCommand, CommandError
 
-from reviews.models import Category, Comment, Genre, GenreTitle, Title, Review
+from reviews.models import Category, Comment, Genre, GenreTitle, Review, Title
 
 User = get_user_model()
 
