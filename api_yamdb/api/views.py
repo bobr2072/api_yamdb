@@ -1,9 +1,10 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, filters
-
+from django_filters import rest_framework as django_filters
 from reviews.models import Title, Review, Genre, Title, Category
+from rest_framework import mixins
 from .filters import TitleFilter
-from .permissions import AdminModeratorOwnerOrReadOnly
+from .permissions import AdminModeratorOwnerOrReadOnly, AdminOrReadOnly
 from .serializers import (CommentSerializer,
                           ReviewSerializer,
                           GenreSerializer,
@@ -15,8 +16,9 @@ from .serializers import (CommentSerializer,
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
-    permission_classes = (AdminModeratorOwnerOrReadOnly,)
+    permission_classes = (AdminOrReadOnly,)
     filterset_class = TitleFilter
+    filter_backends = (django_filters.DjangoFilterBackend,)
 
     def get_serializer_class(self):
         if self.request.method in ('POST', 'PATCH',):
@@ -24,21 +26,28 @@ class TitleViewSet(viewsets.ModelViewSet):
         return TitleSerializer
 
 
-class CategoryViewSet(viewsets.ModelViewSet):
+class CategoryViewSet(mixins.CreateModelMixin,
+                      mixins.ListModelMixin,
+                      mixins.DestroyModelMixin,
+                      viewsets.GenericViewSet,):
     queryset = Category.objects.all().order_by('id')
     serializer_class = CategorySerializer
-    permission_classes = (AdminModeratorOwnerOrReadOnly,)
+    permission_classes = (AdminOrReadOnly,)
     filter_backends = (filters.SearchFilter, )
-    search_fields = ('=name', )
+    search_fields = ('name', )
     lookup_field = 'slug'
 
 
-class GenreViewSet(viewsets.ModelViewSet):
+class GenreViewSet(mixins.CreateModelMixin,
+                   mixins.ListModelMixin,
+                   mixins.DestroyModelMixin,
+                   viewsets.GenericViewSet,):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    permission_classes = (AdminModeratorOwnerOrReadOnly, )
+    permission_classes = (AdminOrReadOnly, )
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('=name', )
+    search_fields = ('name', )
+    lookup_field = 'slug'
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
