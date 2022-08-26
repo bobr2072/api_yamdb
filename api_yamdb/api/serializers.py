@@ -32,6 +32,7 @@ class RegisterSerializer(serializers.ModelSerializer):
                 'Выберите другой логин.')
         return value
 
+
 class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
