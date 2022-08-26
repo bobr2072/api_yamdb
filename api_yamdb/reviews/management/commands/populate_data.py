@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Dict, List
 
 from django.contrib.auth import get_user_model
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
 from reviews.models import Category, Comment, Genre, GenreTitle, Review, Title
 
@@ -125,4 +125,6 @@ class Command(BaseCommand):
         #     poll.opened = False
         #     poll.save()
         #
-        #     self.stdout.write(self.style.SUCCESS('Successfully closed poll "%s"' % poll_id))
+        #     self.stdout.write(
+        # self.style.SUCCESS('Successfully closed poll "%s"' % poll_id
+        # ))
