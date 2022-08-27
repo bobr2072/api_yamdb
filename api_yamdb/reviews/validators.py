@@ -5,5 +5,5 @@ from django.core.exceptions import ValidationError
 
 def year_validator(value):
     if value > dt.datetime.now().year:
-        raise ValidationError(('Проверьте указанный год!'),
+        raise ValidationError(('Некорректно указан год!'),
                               params={'value': value},)
