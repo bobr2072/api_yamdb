@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django_filters import rest_framework as django_filters
-from rest_framework import filters, mixins, viewsets
-
+from rest_framework import filters, viewsets
+from .mixins import CustomViewSet
 from reviews.models import Category, Genre, Review, Title
 
 from .filters import TitleFilter
@@ -24,10 +24,7 @@ class TitleViewSet(viewsets.ModelViewSet):
         return TitleSerializer
 
 
-class CategoryViewSet(mixins.CreateModelMixin,
-                      mixins.ListModelMixin,
-                      mixins.DestroyModelMixin,
-                      viewsets.GenericViewSet,):
+class CategoryViewSet(CustomViewSet):
     queryset = Category.objects.all().order_by('id')
     serializer_class = CategorySerializer
     permission_classes = (AdminOrReadOnly,)
@@ -36,10 +33,7 @@ class CategoryViewSet(mixins.CreateModelMixin,
     lookup_field = 'slug'
 
 
-class GenreViewSet(mixins.CreateModelMixin,
-                   mixins.ListModelMixin,
-                   mixins.DestroyModelMixin,
-                   viewsets.GenericViewSet,):
+class GenreViewSet(CustomViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     permission_classes = (AdminOrReadOnly, )
@@ -58,7 +52,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
-        print(title)
         serializer.save(author=self.request.user, title=title)
 
 

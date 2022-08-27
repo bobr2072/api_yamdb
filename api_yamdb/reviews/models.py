@@ -1,14 +1,13 @@
 from django.contrib.auth import get_user_model
-from django.core.validators import MaxValueValidator
 from django.db import models
-from django.utils import timezone
+from .validators import year_validator
 
 User = get_user_model()
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=256, verbose_name='Название категории')
-    slug = models.SlugField(max_length=50, unique=True, db_index=True)
+    name = models.CharField(verbose_name='Имя', max_length=256)
+    slug = models.SlugField(unique=True, db_index=True)
 
     class Meta:
         verbose_name = 'Категория'
@@ -35,11 +34,12 @@ class Genre(models.Model):
 
 class Title(models.Model):
     name = models.CharField(max_length=256, verbose_name='Название')
-    year = models.IntegerField(
-        validators=[MaxValueValidator(timezone.now().year)], verbose_name='Год'
+    year = models.PositiveSmallIntegerField(
+        validators=[year_validator],
+        verbose_name='Год'
     )
     description = models.CharField(
-        max_length=255, null=True, blank=True, verbose_name='Описание'
+        max_length=255, blank=True, verbose_name='Описание', default='Описание'
     )
     genre = models.ManyToManyField(
         Genre,
@@ -61,6 +61,11 @@ class Title(models.Model):
     class Meta:
         verbose_name = 'Произведение'
         verbose_name_plural = 'Произведения'
+        indexes = [
+            models.Index(fields=('year', 'category',)),
+            models.Index(fields=('year', 'name',)),
+            models.Index(fields=('category', 'name',)),
+        ]
 
     def __str__(self):
         return self.name
