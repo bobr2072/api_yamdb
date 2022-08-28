@@ -27,12 +27,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ('username', 'email',)
 
     def validate_username(self, value):
-        meME = ['me', 'ME', 'Me', 'mE']
-        for m in meME:
-            if value == m:
-                raise serializers.ValidationError(
-                    'Выберите другой логин.')
-            return value
+        if value.lower() == 'me':
+            raise serializers.ValidationError(
+                'Выберите другой логин.')
+        return value
 
 
 class CategorySerializer(serializers.ModelSerializer):
