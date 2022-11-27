@@ -145,6 +145,8 @@ dmypy.json
 
 .mypy_cache
 
-# папки со статикой и медиа
+# other 
 media/
+keyfile
+keyfile.pub
 
